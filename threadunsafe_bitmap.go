@@ -10,7 +10,7 @@ type ThreadUnsafeBitmap struct {
 	size uint64 // support larger MaxBitmapSize for future
 }
 
-func NewThreadUnsafeBitmap(size uint64) Bitmap {
+func newThreadUnsafeBitmap(size uint64) Bitmap {
 	if size < 1 || size > MaxBitmapSize {
 		size = MaxBitmapSize
 	}
@@ -23,10 +23,9 @@ func NewThreadUnsafeBitmap(size uint64) Bitmap {
 		data: make([]byte, (size>>3)+length),
 		size: size,
 	}
-
 }
 
-func (b *ThreadUnsafeBitmap) SetBIT(offset uint64, v bool) bool {
+func (b *ThreadUnsafeBitmap) SetBit(offset uint64, v bool) bool {
 	if offset > b.size {
 		return false
 	}
