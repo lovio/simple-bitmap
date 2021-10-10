@@ -44,9 +44,11 @@ bitmap size is no larger than 512MB, other it will be set to 512MB
 
 ## ThreadSafe
 
-在实现的时候底层存储使用了 byte，并发情况下进行 SetBit 是会出现 lost update 的，
-所以我们通过 atomic 的 CAS 来解决这个问题。比 RWLock 要高效很多。既然使用了
-atomic，那么 unsafe 的方法可能必要性就没有那么高了。
+SetBit 需要使用 atomic 来保证并发安全
+
+~~在实现的时候底层存储使用了 byte，并发情况下进行 SetBit 是会出现 lost update 的
+，所以我们通过 atomic 的 CAS 来解决这个问题。比 RWLock 要高效很多。既然使用了
+atomic，那么 unsafe 的方法可能必要性就没有那么高了。~~
 
 对于集合操作，区分场景。如果要在计算的时候限制 SetBit 操作，那么就不得不使用
 sync.RWLock 来锁住
