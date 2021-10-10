@@ -10,3 +10,8 @@ bitmap。
 统的 bitmap 就会非常浪费内存。这个时候我们就需要靠考虑 compressed bitmap 来高效
 利用空间了。比如 roaringbitmap 就是一种，他从 Bitmap 的一层连续存储转换为一个二
 级的存储结构（Chunk + Container）。
+
+## ThreadSafe
+
+在实现的时候底层存储使用了 byte，并发情况下进行 SetBit 是会出现 lost update 的，
+所以我们通过一个 RWLock 来解决线程安全的问题。
