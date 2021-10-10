@@ -14,4 +14,11 @@ bitmap。
 ## ThreadSafe
 
 在实现的时候底层存储使用了 byte，并发情况下进行 SetBit 是会出现 lost update 的，
-所以我们通过一个 RWLock 来解决线程安全的问题。
+所以我们通过 atomic 的 CAS 来解决这个问题。比 RWLock 要高效很多。既然使用了
+atomic，那么 unsafe 的方法可能必要性就没有那么高了。
+
+## TODO
+
+- [ ] 使用 RWLock 的效率太低了，改成 atomic 之后，需要把存储的类型从 byte 改为
+      uint32，这样就可以直接使用 atomic.LoadUint32
+- [ ] Remove thread unsafe bitmap
