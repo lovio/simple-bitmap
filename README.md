@@ -1,6 +1,6 @@
 # simple-bitmap
 
-bitmap(位图) 是一种常见的数据结构，在 introsect(求交)，union(求并)计算时有非常好
+bitmap(位图) 是一种常见的数据结构，在 intersect(求交)，union(求并)计算时有非常好
 的性能。常用语大量数据的快速排序、快速去重、快速查找等场景。
 
 bitmap 有很多的实现，比如 redis 就内置了 bitmap 的数据结构。也有很多的库实现了
