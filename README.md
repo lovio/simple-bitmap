@@ -11,6 +11,37 @@ bitmap。
 利用空间了。比如 roaringbitmap 就是一种，他从 Bitmap 的一层连续存储转换为一个二
 级的存储结构（Chunk + Container）。
 
+## Usage
+
+```go
+bm := NewBitmap(1024)
+bm.SetBit(1, true)
+bm.GetBit(100) // return true
+
+otherBitmap := NewBitmap(1024)
+otherBitmap.SetBit(1, true)
+otherBitmap.SetBit(200, true)
+
+unionBitmap := bm.Union(otherBitmap)
+unionBitmap.GetBit(1) // return true
+unionBitmap.GetBit(100) // return true
+unionBitmap.GetBit(200) // return true
+
+intersectBitmap := bm.Intersect(otherBitmap)
+intersectBitmap.GetBit(1) // return true
+intersectBitmap.GetBit(100) // return false
+intersectBitmap.GetBit(200) // return false
+
+differenceBitmap := bm.Difference(otherBitmap)
+differenceBitmap.GetBit(1) // return false
+differenceBitmap.GetBit(100) // return true
+differenceBitmap.GetBit(200) // return false
+```
+
+## Restriction
+
+bitmap size is no larger than 512MB, other it will be set to 512MB
+
 ## ThreadSafe
 
 在实现的时候底层存储使用了 byte，并发情况下进行 SetBit 是会出现 lost update 的，
