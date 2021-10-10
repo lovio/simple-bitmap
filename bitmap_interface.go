@@ -6,6 +6,10 @@ type Bitmap interface {
 	Count() uint64
 }
 
+func NewBitmap(size uint64) Bitmap {
+	return newThreadSafeBitmap(size)
+}
+
 func NewThreadUnsafeBitmap(size uint64) Bitmap {
 	return newThreadUnsafeBitmap(size)
 }

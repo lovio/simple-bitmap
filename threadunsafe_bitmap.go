@@ -10,7 +10,7 @@ type ThreadUnsafeBitmap struct {
 	size uint64 // support larger MaxBitmapSize for future
 }
 
-func newThreadUnsafeBitmap(size uint64) Bitmap {
+func newThreadUnsafeBitmap(size uint64) *ThreadUnsafeBitmap {
 	if size < 1 || size > MaxBitmapSize {
 		size = MaxBitmapSize
 	}

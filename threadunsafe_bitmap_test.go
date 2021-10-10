@@ -24,5 +24,7 @@ func TestThreadUnsafeBitmap(t *testing.T) {
 
 		assert.True(t, bm.SetBit(30, false))
 		assert.False(t, bm.GetBit(30))
+
+		assert.False(t, bm.GetBit(51), "offset larger than size should be false")
 	}
 }
