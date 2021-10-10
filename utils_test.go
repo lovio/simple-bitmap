@@ -21,14 +21,20 @@ func TestGetBitmapPosition(t *testing.T) {
 		},
 		{
 			desc:        "",
-			offset:      7,
+			offset:      31,
 			index:       0,
-			bitPosition: 7,
+			bitPosition: 31,
 		},
 		{
 			desc:        "",
-			offset:      8,
+			offset:      32,
 			index:       1,
+			bitPosition: 0,
+		},
+		{
+			desc:        "",
+			offset:      64,
+			index:       2,
 			bitPosition: 0,
 		},
 	}

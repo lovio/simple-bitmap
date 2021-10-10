@@ -1,8 +1,8 @@
 package bitmap
 
 // bit operation
-// GET slices index: offset >> 3 equals to offset/8
-// GET bit position index: offset & 7  equals to offset%8
+// GET slices index: offset >> 5 equals to offset/32
+// GET bit position index: offset & 31  equals to offset%32
 func getBitmapPosition(offset uint64) (index, bitPosition uint64) {
-	return offset >> 3, offset & 7
+	return offset >> 5, offset & 31
 }

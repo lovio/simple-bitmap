@@ -19,6 +19,6 @@ atomic，那么 unsafe 的方法可能必要性就没有那么高了。
 
 ## TODO
 
-- [ ] 使用 RWLock 的效率太低了，改成 atomic 之后，需要把存储的类型从 byte 改为
+- [x] 使用 RWLock 的效率太低了，改成 atomic 之后，需要把存储的类型从 byte 改为
       uint32，这样就可以直接使用 atomic.LoadUint32
-- [ ] Remove thread unsafe bitmap
+- [x] Remove thread unsafe bitmap
