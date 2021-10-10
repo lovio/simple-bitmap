@@ -17,8 +17,11 @@ bitmap。
 所以我们通过 atomic 的 CAS 来解决这个问题。比 RWLock 要高效很多。既然使用了
 atomic，那么 unsafe 的方法可能必要性就没有那么高了。
 
+对于集合操作，区分场景。如果要在计算的时候限制 SetBit 操作，那么就不得不使用
+sync.RWLock 来锁住
+
 ## TODO
 
 - [x] 使用 RWLock 的效率太低了，改成 atomic 之后，需要把存储的类型从 byte 改为
       uint32，这样就可以直接使用 atomic.LoadUint32
-- [x] Remove thread unsafe bitmap
+- [x] Remove thread-unsafe bitmap

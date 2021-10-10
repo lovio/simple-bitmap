@@ -12,6 +12,11 @@ type Bitmap interface {
 	SetBit(offset uint64, v bool) bool
 	GetBit(offset uint64) bool
 	Count() uint64
+	GetData() []uint32
+
+	Union(other Bitmap) Bitmap
+	Intersect(other Bitmap) Bitmap
+	Difference(other Bitmap) Bitmap
 }
 
 func NewBitmap(size uint64) Bitmap {
@@ -68,4 +73,106 @@ func (b *threadsafeBitmap) GetBit(offset uint64) bool {
 
 func (b *threadsafeBitmap) Count() uint64 {
 	return b.size
+}
+
+func (b *threadsafeBitmap) GetData() []uint32 {
+	return b.data
+}
+
+func (b *threadsafeBitmap) Union(other Bitmap) Bitmap {
+	bData := b.GetData()
+	bDataLength := len(bData)
+	otherData := other.GetData()
+	otherDataLength := len(otherData)
+
+	var size uint64
+	var dataSize, minDataSize int
+
+	if bDataLength >= otherDataLength {
+		size = b.Count()
+		dataSize = bDataLength
+		minDataSize = otherDataLength
+	} else {
+		size = other.Count()
+		dataSize = otherDataLength
+		minDataSize = bDataLength
+	}
+	data := make([]uint32, dataSize)
+
+	var i int
+	for i = 0; i < minDataSize; i++ {
+		data[i] = bData[i] | otherData[i]
+	}
+	if bDataLength > otherDataLength {
+		for ; i < dataSize; i++ {
+			data[i] = bData[i]
+		}
+	} else {
+		for ; i < dataSize; i++ {
+			data[i] = otherData[i]
+		}
+	}
+
+	return &threadsafeBitmap{
+		data: data,
+		size: size,
+	}
+}
+
+// Intersect should be based on bitmap b
+func (b *threadsafeBitmap) Intersect(other Bitmap) Bitmap {
+	bData := b.GetData()
+	bDataLength := len(bData)
+	otherData := other.GetData()
+	otherDataLength := len(otherData)
+
+	data := make([]uint32, bDataLength)
+
+	if bDataLength <= otherDataLength {
+		for i := 0; i < bDataLength; i++ {
+			data[i] = bData[i] & otherData[i]
+		}
+	} else {
+		i := 0
+		for ; i < otherDataLength; i++ {
+			data[i] = bData[i] & otherData[i]
+		}
+		for ; i < bDataLength; i++ {
+			data[i] = 0
+		}
+	}
+
+	return &threadsafeBitmap{
+		data: data,
+		size: b.Count(),
+	}
+}
+
+// bit should be in b but not other
+func (b *threadsafeBitmap) Difference(other Bitmap) Bitmap {
+	bData := b.GetData()
+	bDataLength := len(bData)
+	otherData := other.GetData()
+	otherDataLength := len(otherData)
+
+	data := make([]uint32, bDataLength)
+
+	if bDataLength <= otherDataLength {
+		for i := 0; i < bDataLength; i++ {
+			data[i] = bData[i] &^ otherData[i]
+		}
+	} else {
+		i := 0
+		for ; i < otherDataLength; i++ {
+			data[i] = bData[i] &^ otherData[i]
+		}
+		for ; i < bDataLength; i++ {
+			data[i] = bData[i]
+		}
+	}
+
+	return &threadsafeBitmap{
+		data: data,
+		size: b.Count(),
+	}
 }
