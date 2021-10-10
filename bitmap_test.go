@@ -59,19 +59,39 @@ func TestSetBitConcurrent(t *testing.T) {
 }
 
 func TestUnion(t *testing.T) {
-	b := NewBitmap(100)
-	other := NewBitmap(200)
+	{
+		t.Log("b is smaller than other")
+		b := NewBitmap(100)
+		other := NewBitmap(200)
+		b.SetBit(1, true)
+		b.SetBit(100, true)
+		other.SetBit(1, true)
+		other.SetBit(200, true)
 
-	b.SetBit(1, true)
-	other.SetBit(100, true)
+		bm := b.Union(other)
+		assert.Equal(t, other.Count(), bm.Count())
 
-	bm := b.Union(other)
-	assert.Equal(t, uint64(200), bm.Count())
+		assert.True(t, bm.GetBit(1))
+		assert.True(t, bm.GetBit(100))
+		assert.True(t, bm.GetBit(200))
+	}
 
-	assert.True(t, bm.GetBit(1))
-	assert.True(t, bm.GetBit(100))
-	assert.False(t, bm.GetBit(2))
-	assert.False(t, bm.GetBit(200))
+	{
+		t.Log("b is larger than other")
+		b := NewBitmap(200)
+		other := NewBitmap(100)
+		b.SetBit(1, true)
+		b.SetBit(200, true)
+		other.SetBit(1, true)
+		other.SetBit(100, true)
+
+		bm := b.Union(other)
+		assert.Equal(t, b.Count(), bm.Count())
+
+		assert.True(t, bm.GetBit(1))
+		assert.True(t, bm.GetBit(100))
+		assert.True(t, bm.GetBit(200))
+	}
 }
 
 func TestIntersect(t *testing.T) {
@@ -111,18 +131,39 @@ func TestIntersect(t *testing.T) {
 }
 
 func TestDifference(t *testing.T) {
-	b := NewBitmap(100)
-	other := NewBitmap(100)
-	b.SetBit(1, true)
-	b.SetBit(100, true)
-	other.SetBit(1, true)
-	other.SetBit(2, true)
+	{
+		t.Log("b is smaller than other")
+		b := NewBitmap(100)
+		other := NewBitmap(100)
+		b.SetBit(1, true)
+		b.SetBit(100, true)
+		other.SetBit(1, true)
+		other.SetBit(2, true)
 
-	bm := b.Difference(other)
-	assert.Equal(t, b.Count(), bm.Count())
+		bm := b.Difference(other)
+		assert.Equal(t, b.Count(), bm.Count())
 
-	assert.False(t, bm.GetBit(1))
-	assert.False(t, bm.GetBit(2))
-	assert.True(t, bm.GetBit(100))
+		assert.False(t, bm.GetBit(1))
+		assert.False(t, bm.GetBit(2))
+		assert.True(t, bm.GetBit(100))
+	}
 
+	{
+		t.Log("b is larger than other")
+		b := NewBitmap(200)
+		other := NewBitmap(100)
+		b.SetBit(1, true)
+		b.SetBit(100, true)
+		b.SetBit(200, true)
+		other.SetBit(1, true)
+		other.SetBit(2, true)
+
+		bm := b.Difference(other)
+		assert.Equal(t, b.Count(), bm.Count())
+
+		assert.False(t, bm.GetBit(1))
+		assert.False(t, bm.GetBit(2))
+		assert.True(t, bm.GetBit(100))
+		assert.True(t, bm.GetBit(200))
+	}
 }
