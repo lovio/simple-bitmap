@@ -1,4 +1,4 @@
-# simple-bitmap
+# simple-bitmap [![codecov](https://codecov.io/gh/lovio/simple-bitmap/branch/master/graph/badge.svg?token=4BSWWZPZ4I)](https://codecov.io/gh/lovio/simple-bitmap)
 
 bitmap(位图) 是一种常见的数据结构，在 intersect(求交)，union(求并)计算时有非常好
 的性能。常用语大量数据的快速排序、快速去重、快速查找等场景。
